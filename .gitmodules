@@ -1,0 +1,3 @@
+[submodule "real-roaring-datasets"]
+	path = real-roaring-datasets
+	url = https://github.com/RoaringBitmap/real-roaring-datasets

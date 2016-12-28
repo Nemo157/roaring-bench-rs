@@ -1,0 +1,11 @@
+[package]
+name = "roaring-bench"
+version = "0.1.0"
+authors = ["Wim Looman <wim@nemo157.com>"]
+
+[dependencies]
+zip = "0.2.0"
+error-chain = "0.7.2"
+lazy_static = "0.2.2"
+roaring = "0.4.2"
+croaring = "0.1.3"
