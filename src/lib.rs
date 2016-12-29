@@ -6,6 +6,17 @@ use std::io::Read;
 
 lazy_static! {
     pub static ref CENSUS_INCOME: Vec<Vec<u32>> = load_census_income().unwrap();
+    pub static ref CENSUS_INCOME_SRT: Vec<Vec<u32>> = load_census_income_srt().unwrap();
+    pub static ref CENSUS1881: Vec<Vec<u32>> = load_census1881().unwrap();
+    pub static ref CENSUS1881_SRT: Vec<Vec<u32>> = load_census1881_srt().unwrap();
+    pub static ref DIMENSION_003: Vec<Vec<u32>> = load_dimension_003().unwrap();
+    pub static ref DIMENSION_008: Vec<Vec<u32>> = load_dimension_008().unwrap();
+    pub static ref DIMENSION_033: Vec<Vec<u32>> = load_dimension_033().unwrap();
+    pub static ref USCENSUS2000: Vec<Vec<u32>> = load_uscensus2000().unwrap();
+    pub static ref WEATHER_SEPT_85: Vec<Vec<u32>> = load_weather_sept_85().unwrap();
+    pub static ref WEATHER_SEPT_85_SRT: Vec<Vec<u32>> = load_weather_sept_85_srt().unwrap();
+    pub static ref WIKILEAKS_NOQUOTES: Vec<Vec<u32>> = load_wikileaks_noquotes().unwrap();
+    pub static ref WIKILEAKS_NOQUOTES_SRT: Vec<Vec<u32>> = load_wikileaks_noquotes_srt().unwrap();
 }
 
 error_chain! {

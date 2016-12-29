@@ -3,33 +3,55 @@
 extern crate test;
 extern crate roaring_bench;
 
+macro_rules! single_data {
+    ($cb:tt) => {
+        $cb!(census_income_0, CENSUS_INCOME, 0);
+        $cb!(census_income_1, CENSUS_INCOME, 1);
+        $cb!(census_income_2, CENSUS_INCOME, 2);
+        $cb!(census_income_3, CENSUS_INCOME, 3);
+        $cb!(census_income_4, CENSUS_INCOME, 4);
+        $cb!(census_income_5, CENSUS_INCOME, 5);
+    }
+}
+
 mod roaring {
-    extern crate roaring;
+    mod create {
+        extern crate roaring;
 
-    use std::iter::FromIterator;
-    use test::{ black_box, Bencher };
-    use roaring_bench;
+        macro_rules! create {
+            ($n:ident, $d:ident, $i:expr) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    b.iter(|| -> roaring::RoaringBitmap<u32> {
+                        ::test::black_box(data).iter().collect()
+                    });
+                }
+            }
+        }
 
-    #[bench]
-    fn create_census_income(b: &mut Bencher) {
-        let data = &roaring_bench::CENSUS_INCOME[0];
-        b.iter(|| roaring::RoaringBitmap::from_iter(black_box(data)));
+        single_data!(create);
     }
 }
 
 mod croaring {
-    extern crate croaring;
+    mod create {
+        extern crate croaring;
 
-    use test::{ black_box, Bencher };
-    use roaring_bench;
+        macro_rules! create {
+            ($n:ident, $d:ident, $i:expr) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    b.iter(|| {
+                        let mut bitmap = croaring::Bitmap::create_with_capacity(::test::black_box(data).len() as u32);
+                        bitmap.add_many(::test::black_box(data));
+                        bitmap
+                    });
+                }
+            }
+        }
 
-    #[bench]
-    fn create_census_income(b: &mut Bencher) {
-        let data = &roaring_bench::CENSUS_INCOME[0];
-        b.iter(|| {
-            let mut bitmap = croaring::Bitmap::create_with_capacity(black_box(data).len() as u32);
-            bitmap.add_many(black_box(data));
-            bitmap
-        });
+        single_data!(create);
     }
 }
