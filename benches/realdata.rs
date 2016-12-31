@@ -10,10 +10,15 @@ macro_rules! single_data {
     ($cb:tt) => {
         mod $cb {
             $cb!(census_income_0, CENSUS_INCOME[0]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_1, CENSUS_INCOME[1]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_2, CENSUS_INCOME[2]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_3, CENSUS_INCOME[3]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_4, CENSUS_INCOME[4]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_5, CENSUS_INCOME[5]);
         }
     }
@@ -23,10 +28,15 @@ macro_rules! multi_data {
     ($cb:tt) => {
         mod $cb {
             $cb!(census_income_0_1, CENSUS_INCOME[0], CENSUS_INCOME[1]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_1_2, CENSUS_INCOME[1], CENSUS_INCOME[2]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_2_3, CENSUS_INCOME[2], CENSUS_INCOME[3]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_3_4, CENSUS_INCOME[3], CENSUS_INCOME[4]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_4_5, CENSUS_INCOME[4], CENSUS_INCOME[5]);
+            #[cfg(not(feature = "quick"))]
             $cb!(census_income_5_6, CENSUS_INCOME[5], CENSUS_INCOME[6]);
         }
     }
