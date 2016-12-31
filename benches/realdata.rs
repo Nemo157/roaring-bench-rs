@@ -78,6 +78,28 @@ mod bench {
             }
         }
 
+        macro_rules! is_empty {
+            ($n:ident, $d:ident[$i:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    let bitmap = data.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    b.iter(|| ::test::black_box(&bitmap).is_empty());
+                }
+            }
+        }
+
+        macro_rules! len {
+            ($n:ident, $d:ident[$i:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    let bitmap = data.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    b.iter(|| ::test::black_box(&bitmap).len());
+                }
+            }
+        }
+
         macro_rules! or {
             ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
                 #[bench]
@@ -133,6 +155,8 @@ mod bench {
         single_data!(create);
         single_data!(clone);
         single_data!(iter_sum);
+        single_data!(is_empty);
+        single_data!(len);
         multi_data!(or);
         multi_data!(and);
         multi_data!(xor);
@@ -178,6 +202,30 @@ mod bench {
             }
         }
 
+        macro_rules! is_empty {
+            ($n:ident, $d:ident[$i:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    let mut bitmap = ::croaring::Bitmap::create_with_capacity(data.len() as u32);
+                    bitmap.add_many(data);
+                    b.iter(|| ::test::black_box(&bitmap).is_empty());
+                }
+            }
+        }
+
+        macro_rules! len {
+            ($n:ident, $d:ident[$i:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    let mut bitmap = ::croaring::Bitmap::create_with_capacity(data.len() as u32);
+                    bitmap.add_many(data);
+                    b.iter(|| ::test::black_box(&bitmap).cardinality());
+                }
+            }
+        }
+
         macro_rules! or {
             ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
                 #[bench]
@@ -241,6 +289,8 @@ mod bench {
         single_data!(create);
         single_data!(clone);
         single_data!(iter_sum);
+        single_data!(is_empty);
+        single_data!(len);
         multi_data!(or);
         multi_data!(and);
         multi_data!(xor);
