@@ -6,38 +6,48 @@ extern crate roaring_bench;
 extern crate roaring;
 extern crate croaring;
 
+#[cfg(feature = "quick")]
 macro_rules! single_data {
     ($cb:tt) => {
         mod $cb {
-            $cb!(census_income_0, CENSUS_INCOME[0]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_1, CENSUS_INCOME[1]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_2, CENSUS_INCOME[2]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_3, CENSUS_INCOME[3]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_4, CENSUS_INCOME[4]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_5, CENSUS_INCOME[5]);
+            $cb! { census_income_0(CENSUS_INCOME[0]) }
         }
     }
 }
 
+#[cfg(feature = "quick")]
 macro_rules! multi_data {
     ($cb:tt) => {
         mod $cb {
-            $cb!(census_income_0_1, CENSUS_INCOME[0], CENSUS_INCOME[1]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_1_2, CENSUS_INCOME[1], CENSUS_INCOME[2]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_2_3, CENSUS_INCOME[2], CENSUS_INCOME[3]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_3_4, CENSUS_INCOME[3], CENSUS_INCOME[4]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_4_5, CENSUS_INCOME[4], CENSUS_INCOME[5]);
-            #[cfg(not(feature = "quick"))]
-            $cb!(census_income_5_6, CENSUS_INCOME[5], CENSUS_INCOME[6]);
+            $cb! { census_income_0_1(CENSUS_INCOME[0], CENSUS_INCOME[1]) }
+        }
+    }
+}
+
+#[cfg(not(feature = "quick"))]
+macro_rules! single_data {
+    ($cb:tt) => {
+        mod $cb {
+            $cb! { census_income_0(CENSUS_INCOME[0]) }
+            $cb! { census_income_1(CENSUS_INCOME[1]) }
+            $cb! { census_income_2(CENSUS_INCOME[2]) }
+            $cb! { census_income_3(CENSUS_INCOME[3]) }
+            $cb! { census_income_4(CENSUS_INCOME[4]) }
+            $cb! { census_income_5(CENSUS_INCOME[5]) }
+        }
+    }
+}
+
+#[cfg(not(feature = "quick"))]
+macro_rules! multi_data {
+    ($cb:tt) => {
+        mod $cb {
+            $cb! { census_income_0_1(CENSUS_INCOME[0], CENSUS_INCOME[1]) }
+            $cb! { census_income_1_2(CENSUS_INCOME[1], CENSUS_INCOME[2]) }
+            $cb! { census_income_2_3(CENSUS_INCOME[2], CENSUS_INCOME[3]) }
+            $cb! { census_income_3_4(CENSUS_INCOME[3], CENSUS_INCOME[4]) }
+            $cb! { census_income_4_5(CENSUS_INCOME[4], CENSUS_INCOME[5]) }
+            $cb! { census_income_5_6(CENSUS_INCOME[5], CENSUS_INCOME[6]) }
         }
     }
 }
@@ -48,7 +58,7 @@ mod bench {
             (($bitmap:ident) $($t:ident { $($body:tt)* })*) => {
                 $(
                     macro_rules! $t {
-                        ($n:ident, $d:ident[$i:expr]) => {
+                        ($n:ident($d:ident[$i:expr])) => {
                             #[bench]
                             fn $n(b: &mut ::test::Bencher) {
                                 let data = &::roaring_bench::$d[$i];
@@ -69,7 +79,7 @@ mod bench {
             (($bitmap1:ident, $bitmap2:ident) $($t:ident { $($body:tt)* })*) => {
                 $(
                     macro_rules! $t {
-                        ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                        ($n:ident($d1:ident[$i1:expr], $d2:ident[$i2:expr])) => {
                             #[bench]
                             fn $n(b: &mut ::test::Bencher) {
                                 let data1 = &::roaring_bench::$d1[$i1];
@@ -90,7 +100,7 @@ mod bench {
         }
 
         macro_rules! create {
-            ($n:ident, $d:ident[$i:expr]) => {
+            ($n:ident($d:ident[$i:expr])) => {
                 #[bench]
                 fn $n(b: &mut ::test::Bencher) {
                     let data = &::roaring_bench::$d[$i];
@@ -126,7 +136,7 @@ mod bench {
             (($bitmap:ident) $($t:ident { $($body:tt)* })*) => {
                 $(
                     macro_rules! $t {
-                        ($n:ident, $d:ident[$i:expr]) => {
+                        ($n:ident($d:ident[$i:expr])) => {
                             #[bench]
                             fn $n(b: &mut ::test::Bencher) {
                                 let data = &::roaring_bench::$d[$i];
@@ -148,7 +158,7 @@ mod bench {
             (($bitmap1:ident, $bitmap2:ident) $($t:ident { $($body:tt)* })*) => {
                 $(
                     macro_rules! $t {
-                        ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                        ($n:ident($d1:ident[$i1:expr], $d2:ident[$i2:expr])) => {
                             #[bench]
                             fn $n(b: &mut ::test::Bencher) {
                                 let data1 = &::roaring_bench::$d1[$i1];
@@ -171,7 +181,7 @@ mod bench {
         }
 
         macro_rules! create {
-            ($n:ident, $d:ident[$i:expr]) => {
+            ($n:ident($d:ident[$i:expr])) => {
                 #[bench]
                 fn $n(b: &mut ::test::Bencher) {
                     let data = &::roaring_bench::$d[$i];
