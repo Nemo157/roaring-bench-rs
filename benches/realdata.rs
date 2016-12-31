@@ -152,6 +152,45 @@ mod bench {
             }
         }
 
+        macro_rules! is_disjoint {
+            ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data1 = &::roaring_bench::$d1[$i1];
+                    let data2 = &::roaring_bench::$d2[$i2];
+                    let bitmap1 = data1.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    let bitmap2 = data2.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    b.iter(|| ::test::black_box(&bitmap1).is_disjoint(::test::black_box(&bitmap2)));
+                }
+            }
+        }
+
+        macro_rules! is_subset {
+            ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data1 = &::roaring_bench::$d1[$i1];
+                    let data2 = &::roaring_bench::$d2[$i2];
+                    let bitmap1 = data1.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    let bitmap2 = data2.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    b.iter(|| ::test::black_box(&bitmap1).is_subset(::test::black_box(&bitmap2)));
+                }
+            }
+        }
+
+        macro_rules! is_superset {
+            ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data1 = &::roaring_bench::$d1[$i1];
+                    let data2 = &::roaring_bench::$d2[$i2];
+                    let bitmap1 = data1.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    let bitmap2 = data2.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    b.iter(|| ::test::black_box(&bitmap1).is_superset(::test::black_box(&bitmap2)));
+                }
+            }
+        }
+
         single_data!(create);
         single_data!(clone);
         single_data!(iter_sum);
@@ -161,6 +200,9 @@ mod bench {
         multi_data!(and);
         multi_data!(xor);
         multi_data!(sub);
+        multi_data!(is_disjoint);
+        multi_data!(is_subset);
+        multi_data!(is_superset);
     }
 
     mod croaring {
@@ -286,6 +328,36 @@ mod bench {
             }
         }
 
+        macro_rules! is_subset {
+            ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data1 = &::roaring_bench::$d1[$i1];
+                    let mut bitmap1 = ::croaring::Bitmap::create_with_capacity(data1.len() as u32);
+                    bitmap1.add_many(data1);
+                    let data2 = &::roaring_bench::$d2[$i2];
+                    let mut bitmap2 = ::croaring::Bitmap::create_with_capacity(data2.len() as u32);
+                    bitmap2.add_many(data2);
+                    b.iter(|| ::test::black_box(&bitmap1).is_subset(::test::black_box(&bitmap2)));
+                }
+            }
+        }
+
+        macro_rules! is_strict_subset {
+            ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data1 = &::roaring_bench::$d1[$i1];
+                    let mut bitmap1 = ::croaring::Bitmap::create_with_capacity(data1.len() as u32);
+                    bitmap1.add_many(data1);
+                    let data2 = &::roaring_bench::$d2[$i2];
+                    let mut bitmap2 = ::croaring::Bitmap::create_with_capacity(data2.len() as u32);
+                    bitmap2.add_many(data2);
+                    b.iter(|| ::test::black_box(&bitmap1).is_strict_subset(::test::black_box(&bitmap2)));
+                }
+            }
+        }
+
         single_data!(create);
         single_data!(clone);
         single_data!(iter_sum);
@@ -295,5 +367,7 @@ mod bench {
         multi_data!(and);
         multi_data!(xor);
         multi_data!(sub);
+        multi_data!(is_subset);
+        multi_data!(is_strict_subset);
     }
 }
