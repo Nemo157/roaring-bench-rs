@@ -57,6 +57,17 @@ mod bench {
             }
         }
 
+        macro_rules! iter_sum {
+            ($n:ident, $d:ident[$i:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    let bitmap = data.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                    b.iter(|| ::test::black_box(&bitmap).iter().sum::<u32>());
+                }
+            }
+        }
+
         macro_rules! or {
             ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
                 #[bench]
@@ -98,6 +109,7 @@ mod bench {
 
         single_data!(create);
         single_data!(clone);
+        single_data!(iter_sum);
         multi_data!(or);
         multi_data!(and);
         multi_data!(xor);
@@ -130,6 +142,18 @@ mod bench {
             }
         }
 
+        macro_rules! iter_sum {
+            ($n:ident, $d:ident[$i:expr]) => {
+                #[bench]
+                fn $n(b: &mut ::test::Bencher) {
+                    let data = &::roaring_bench::$d[$i];
+                    let mut bitmap = ::croaring::Bitmap::create_with_capacity(data.len() as u32);
+                    bitmap.add_many(data);
+                    b.iter(|| ::test::black_box(&bitmap).into_iter().sum::<u32>());
+                }
+            }
+        }
+
         macro_rules! or {
             ($n:ident, $d1:ident[$i1:expr], $d2:ident[$i2:expr]) => {
                 #[bench]
@@ -177,6 +201,7 @@ mod bench {
 
         single_data!(create);
         single_data!(clone);
+        single_data!(iter_sum);
         multi_data!(or);
         multi_data!(and);
         multi_data!(xor);
