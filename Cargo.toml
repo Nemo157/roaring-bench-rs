@@ -10,5 +10,5 @@ quick = []
 zip = "0.2.0"
 error-chain = "0.7.2"
 lazy_static = "0.2.2"
-roaring = "0.4.2"
+roaring = { git = "https://github.com/Nemo157/roaring-rs" }
 croaring = "0.1.3"

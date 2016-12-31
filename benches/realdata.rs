@@ -62,7 +62,7 @@ mod bench {
                             #[bench]
                             fn $n(b: &mut ::test::Bencher) {
                                 let data = &::roaring_bench::$d[$i];
-                                let $bitmap = data.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                                let $bitmap = data.iter().cloned().collect::<::roaring::RoaringBitmap>();
                                 b.iter(|| {
                                     let $bitmap = ::test::black_box(&$bitmap);
                                     $($body)*
@@ -84,8 +84,8 @@ mod bench {
                             fn $n(b: &mut ::test::Bencher) {
                                 let data1 = &::roaring_bench::$d1[$i1];
                                 let data2 = &::roaring_bench::$d2[$i2];
-                                let $bitmap1 = data1.iter().collect::<::roaring::RoaringBitmap<u32>>();
-                                let $bitmap2 = data2.iter().collect::<::roaring::RoaringBitmap<u32>>();
+                                let $bitmap1 = data1.iter().cloned().collect::<::roaring::RoaringBitmap>();
+                                let $bitmap2 = data2.iter().cloned().collect::<::roaring::RoaringBitmap>();
                                 b.iter(|| {
                                     let $bitmap1 = ::test::black_box(&$bitmap1);
                                     let $bitmap2 = ::test::black_box(&$bitmap2);
@@ -104,8 +104,8 @@ mod bench {
                 #[bench]
                 fn $n(b: &mut ::test::Bencher) {
                     let data = &::roaring_bench::$d[$i];
-                    b.iter(|| -> ::roaring::RoaringBitmap<u32> {
-                        ::test::black_box(data).iter().collect()
+                    b.iter(|| -> ::roaring::RoaringBitmap {
+                        ::test::black_box(data).iter().cloned().collect()
                     });
                 }
             }
